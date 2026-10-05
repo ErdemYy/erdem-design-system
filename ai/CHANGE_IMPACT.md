@@ -1,0 +1,86 @@
+# Change Impact
+
+Determine what a change can affect before making it, in proportion to the class (`TASK_ROUTING.md`). This is Level 4 of `CONTEXT_PROTOCOL.md`.
+
+## Process
+
+1. Identify the target file(s) from Level 3.
+2. Find each dimension below, using the graph if present, otherwise targeted search.
+3. Check whether the target is a public surface (below).
+4. Assign a risk level.
+5. Set validation and further reading accordingly (`VALIDATION_PROTOCOL.md`).
+6. Record the result in task state when risk is MEDIUM or higher.
+
+## Dimensions
+
+| Dimension | Question | How to find it without a graph |
+|---|---|---|
+| direct dependencies | what does the target use? | its imports and references |
+| direct consumers | who uses the target? | search for its path, module name and exported symbols |
+| related data | schemas, stores, contracts it reads or writes | search for the types and table, collection or key names |
+| related config | build, runtime, environment, routing settings that affect it | search for its names in config files (never print secret values) |
+| related tests | what covers it? | search test paths for its names; nearby test files |
+| platform impact | does it differ per platform or target? | platform-specific files and conditionals |
+| API impact | does a public signature, endpoint or contract change? | exported names, route definitions, type definitions |
+| design-system impact | does it implement or consume tokens, theme or component rules? | search for token names and theme files; `core/` per `CONTEXT_PROTOCOL.md` selective loading |
+
+Design-system impact: changing a design token value or status is a design-system decision, not an ordinary code change. Do not promote `proposed`, `unresolved` or `needs_reference` tokens (`core/DESIGN_TOKENS.md`).
+
+## Risk levels
+
+| Level | Examples |
+|---|---|
+| LOW | isolated text change; local style tweak; a file with no consumers |
+| MEDIUM | shared component change; a function with several consumers within one subsystem |
+| HIGH | shared token or theme; public API or type; schema; routing; behavior used across subsystems or platforms |
+| CRITICAL | authentication, authorization, security, data migration, core architecture, build or deploy pipeline |
+
+Modifiers that raise risk: many consumers, public surface, no test coverage, hard to reverse, several platforms. Do not over-classify: an isolated change in an important-looking file stays LOW if search shows no consumers. If impact cannot be determined after targeted search, treat it as one level higher and say why.
+
+| Risk | Action |
+|---|---|
+| LOW | proceed; validate narrowly |
+| MEDIUM | read consumers' usage; update affected tests |
+| HIGH | read consumers and tests; state impact in task state; validate broadly |
+| CRITICAL | record a decision (`templates/DECISIONS.md`), confirm with the user, prefer a staged and reversible change |
+
+## Public surface detection
+
+A public surface is anything other code, other teams, other platforms or users depend on. Changes there trigger broader impact checks: risk at least MEDIUM, and impact depth one step beyond the class default.
+
+| Surface | Signals |
+|---|---|
+| exported library API | exports from package entry points or barrel files |
+| shared components | located in shared or common directories; imported across subsystems |
+| public API types | request, response and contract types |
+| database schema | schema, migration and model definitions |
+| routing | route definitions, URL structure |
+| global theme | theme and global style files |
+| design tokens | token files and the token register |
+| authentication | login, session, permission code |
+| configuration | build, runtime, environment, dependency manifests |
+| core infrastructure | foundation modules many files import |
+
+Detection uses structure and evidence: consumer count from search or graph, location, export status, and any `publicSurface` marking in `FILE_INDEX.md`. An index marking is a hint; verify in source.
+
+## Graph consumption contract
+
+If a machine graph exists (`GRAPH_PROTOCOL.md`), impact analysis queries neighbors instead of searching. Fields expected per node, where available:
+
+| Field | Meaning |
+|---|---|
+| node | stable identifier |
+| type | file, module, subsystem, external |
+| path | location |
+| imports | what it depends on |
+| importers | what depends on it |
+| exports | exposed names |
+| consumers | resolved users of its exports |
+| publicSurface | flag |
+| risk | advisory risk hint |
+
+Rules:
+- The graph is DERIVED: it carries the same metadata and staleness states as summaries (`INDEX_PROTOCOL.md`). A stale graph is a hint; verify the neighbors you rely on in source.
+- Query neighbors of the target; never load a whole graph (`TOKEN_EFFICIENCY.md`).
+- No graph: fall back to the targeted search in the table above. Work is never blocked.
+- The fields above are defined by the machine graph schema in `GRAPH_PROTOCOL.md` (generated by `tools/graph/`, queried through `tools/analyze/`). `importers` are dependents through `imports` edges; `consumers` are dependents through any edge type.

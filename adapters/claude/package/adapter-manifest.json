@@ -1,0 +1,80 @@
+{
+  "name": "erdem-claude-adapter",
+  "version": "0.1.0",
+  "description": "Claude Code adapter for the Erdem Design System: one skill (/erdem), an optional SessionStart status line, and a small optional CLAUDE.md block.",
+  "owner": "ERDEM_DESIGN_SYSTEM_CLAUDE_ADAPTER",
+  "configSchemaVersion": 1,
+  "skillName": "erdem",
+  "requiresSystemVersion": "0.6.0",
+  "integrationType": [
+    "skill",
+    "session-start-hook",
+    "claude-md-block"
+  ],
+  "hookOwner": "ERDEM_DESIGN_SYSTEM_CLAUDE_ADAPTER",
+  "claudeMdMarker": "ERDEM_DESIGN_SYSTEM_CLAUDE_ADAPTER",
+  "capabilities": [
+    "skill: /erdem with modes design, review, context, handoff",
+    "session-start-hook: one status line, no rebuilds, never blocks",
+    "claude-md-block: small managed bootstrap block (opt-in)",
+    "safe-install: dry run, idempotent, ownership markers, backups",
+    "doctor: read-only diagnostics"
+  ],
+  "minimum": {
+    "node": "20"
+  },
+  "verifiedWith": {
+    "claudeCode": "2.1.288",
+    "node": "24.19.0",
+    "platform": "win32"
+  },
+  "files": [
+    {
+      "source": "skill/SKILL.md",
+      "target": "SKILL.md",
+      "render": "skill"
+    },
+    {
+      "source": "skill/references/design-routing.md",
+      "target": "references/design-routing.md"
+    },
+    {
+      "source": "skill/references/context-routing.md",
+      "target": "references/context-routing.md"
+    },
+    {
+      "source": "skill/references/claude-workflow.md",
+      "target": "references/claude-workflow.md"
+    },
+    {
+      "source": "skill/references/troubleshooting.md",
+      "target": "references/troubleshooting.md"
+    },
+    {
+      "source": "skill/scripts/erdem.mjs",
+      "target": "scripts/erdem.mjs"
+    }
+  ],
+  "generatedFiles": [
+    "adapter-link.json",
+    ".erdem-owner.json"
+  ],
+  "hooks": [
+    {
+      "event": "SessionStart",
+      "script": "hooks/session-start.mjs",
+      "timeoutSeconds": 5,
+      "optIn": true
+    }
+  ],
+  "claudeMd": {
+    "source": "CLAUDE.md",
+    "optIn": true
+  },
+  "ledger": "install.json (user scope: <claude config dir>/erdem-adapter/; project scope: <project>/.claude/erdem-adapter-install.json)",
+  "supportedEnvironment": {
+    "node": ">=20",
+    "operatingSystems": "no platform-specific code; developed and tested on Windows 11 only (macOS and Linux untested)",
+    "dependencies": "none"
+  }
+}

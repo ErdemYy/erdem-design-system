@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "erdem.index.v1",
+  "title": "Erdem project index (machine), schema version 1",
+  "type": "object",
+  "required": ["schema", "schemaVersion", "tool", "generatedAt", "project", "configDigest", "hashAlgo", "profile", "fingerprint", "structureFingerprint", "files", "directories", "stats"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "erdem.index" },
+    "schemaVersion": { "const": 1 },
+    "tool": { "type": "object", "required": ["name", "version"] },
+    "generatedAt": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T" },
+    "project": { "type": "object", "required": ["name"] },
+    "configDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "hashAlgo": { "type": "string" },
+    "profile": { "enum": ["none", "lite", "standard", "full"] },
+    "fingerprint": { "type": "object", "required": ["algo", "hash", "count"] },
+    "structureFingerprint": { "type": "object", "required": ["algo", "hash", "count"] },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "ext", "language", "category", "size", "mtime", "fingerprint"],
+        "additionalProperties": false,
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "ext": { "type": "string" },
+          "language": { "type": ["string", "null"] },
+          "category": { "enum": ["source", "test", "config", "documentation", "asset", "generated", "unknown"] },
+          "size": { "type": "integer", "minimum": 0 },
+          "mtime": { "type": "string" },
+          "fingerprint": {
+            "type": "object",
+            "required": ["algo", "hash", "size", "normalization"],
+            "properties": {
+              "algo": { "type": "string" },
+              "hash": { "type": ["string", "null"] },
+              "size": { "type": "integer", "minimum": 0 },
+              "normalization": { "type": ["string", "null"] },
+              "mtime": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "directories": { "type": "array", "items": { "type": "string" } },
+    "stats": { "type": "object" }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "erdem.graph.v1",
+  "title": "Erdem machine graph, schema version 1",
+  "type": "object",
+  "required": ["schema", "schemaVersion", "tool", "generatedAt", "project", "configDigest", "fingerprint", "stats", "cycles", "nodes", "edges"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "erdem.graph" },
+    "schemaVersion": { "const": 1 },
+    "tool": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": { "name": { "type": "string" }, "version": { "type": "string" } }
+    },
+    "generatedAt": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T" },
+    "project": { "type": "object", "required": ["name"], "properties": { "name": { "type": "string" } } },
+    "configDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "fingerprint": {
+      "type": "object",
+      "required": ["algo", "hash", "count"],
+      "properties": {
+        "algo": { "type": "string" },
+        "hash": { "type": ["string", "null"] },
+        "count": { "type": "integer", "minimum": 0 },
+        "normalization": { "type": "string" },
+        "reason": { "type": "string" }
+      }
+    },
+    "stats": {
+      "type": "object",
+      "required": ["nodes", "files", "externals", "edges", "edgesByType", "cycles", "unresolvedImports", "languagesAnalyzed", "languagesMetadataOnly"],
+      "properties": {
+        "nodes": { "type": "integer", "minimum": 0 },
+        "files": { "type": "integer", "minimum": 0 },
+        "externals": { "type": "integer", "minimum": 0 },
+        "edges": { "type": "integer", "minimum": 0 },
+        "edgesByType": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "cycles": { "type": "integer", "minimum": 0 },
+        "unresolvedImports": { "type": "integer", "minimum": 0 },
+        "languagesAnalyzed": { "type": "array", "items": { "type": "string" } },
+        "languagesMetadataOnly": { "type": "object", "additionalProperties": { "type": "integer" } }
+      }
+    },
+    "cycles": { "type": "array", "items": { "type": "array", "items": { "type": "string" } } },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "path", "language", "imports", "importers", "exports", "consumers", "publicSurface", "risk", "fingerprint", "metadata"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["file", "external"] },
+          "path": { "type": ["string", "null"] },
+          "language": { "type": ["string", "null"] },
+          "imports": { "type": "array", "items": { "type": "string" } },
+          "importers": { "type": "array", "items": { "type": "string" } },
+          "exports": { "type": "array", "items": { "type": "string" } },
+          "consumers": { "type": "array", "items": { "type": "string" } },
+          "publicSurface": { "type": "boolean" },
+          "risk": { "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL", null] },
+          "fingerprint": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "required": ["algo", "hash", "size", "normalization"],
+                "properties": {
+                  "algo": { "type": "string" },
+                  "hash": { "type": ["string", "null"] },
+                  "size": { "type": "integer", "minimum": 0 },
+                  "normalization": { "type": ["string", "null"] },
+                  "reason": { "type": "string" }
+                }
+              }
+            ]
+          },
+          "metadata": { "type": "object" }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "target", "type", "kind"],
+        "additionalProperties": false,
+        "properties": {
+          "source": { "type": "string", "minLength": 1 },
+          "target": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["imports", "exports", "references", "calls", "extends", "implements", "uses"] },
+          "kind": { "enum": ["static", "side-effect", "dynamic", "require", "reexport", "configured"] },
+          "typeOnly": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

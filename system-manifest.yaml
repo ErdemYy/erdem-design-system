@@ -1,0 +1,107 @@
+# Machine-readable manifest. Keep simple and stable; tools may parse this.
+# Human explanation lives in README.md. Do not add project-specific data here.
+name: erdem-design-system
+version: 1.0.0
+manifestSchema: 1
+purpose: A reusable, tool-agnostic personal design and AI development system.
+
+designSystem:
+  name: Erdem Design System
+  path: core/
+  status: phase1
+  tokenContract: core/DESIGN_TOKENS.md
+  tokenRegister: core/TOKEN_REGISTER.md   # only place token values live
+  evidence: core/EVIDENCE.md
+  decisions: core/DESIGN_DECISIONS.md
+  tokenStatuses: [verified, approved, proposed, experimental, deprecated, unresolved, needs_reference]
+  officialStatuses: [verified, approved]
+  tokenLayers: [foundation, semantic, component]
+  themes: { dark: defined, light: architecture-only, high-contrast: architecture-only, custom-brand: architecture-only }
+
+aiSystem:
+  name: Erdem AI Development Protocol
+  path: ai/
+  entry: ai/CONTEXT_PROTOCOL.md
+  status: implemented   # the specification plus the working tooling in tools/ (Phases 2 to 6)
+  principles: [smallest-sufficient-context, progressive-expansion, source-is-authoritative, no-reread-unchanged]
+  contextLevels: [0-root-orientation, 1-task-scope, 2-subsystem, 3-target, 4-impact, 5-architecture]
+  contextScopes: [MINIMAL, TARGETED, SUBSYSTEM, CROSS-SYSTEM, ARCHITECTURAL]
+  taskClasses: [TRIVIAL, SMALL, MEDIUM, LARGE, ARCHITECTURAL]
+  taskTypes: [ui-change, bug-fix, feature, refactor, performance, architecture, documentation, dependency, configuration, migration, test, security]
+  riskLevels: [LOW, MEDIUM, HIGH, CRITICAL]
+  artifactClasses: { authoritative: [source, tests, project-instructions, decisions], derived: [indexes, summaries, graphs, reports], temporary: [cache, logs, analysis] }
+  stalenessStates: [CURRENT, STALE, UNVERIFIABLE]
+  indexProfiles: [none, lite, standard, full]
+  projectArtifacts: [AI_INDEX.md, DIRECTORY_INDEX.md, FILE_INDEX.md, TASK_STATE.md, DECISIONS.md, HANDOFF.md]
+
+platforms:
+  path: platforms/
+  supported: [web, mobile, flutter, react-native, desktop, webgl-3d]
+
+agents:
+  path: adapters/
+  supported: [claude, codex, antigravity, generic]
+  implemented: [generic, claude, codex, antigravity]
+  claude: { path: adapters/claude/, version: 0.1.0, readme: adapters/claude/README.md, skill: erdem, hookOwner: ERDEM_DESIGN_SYSTEM_CLAUDE_ADAPTER, verifiedWith: { claudeCode: 2.1.288 }, optIn: [hook, claude-md], dependencies: none }
+  codex: { path: adapters/codex/, version: 0.1.0, readme: adapters/codex/README.md, skill: erdem, owner: ERDEM_DESIGN_SYSTEM_CODEX_ADAPTER, verifiedWith: { codexCli: 0.158.0-alpha.2.1 }, optIn: [agents-md-block], hooks: not-shipped, dependencies: none }
+  antigravity: { path: adapters/antigravity/, version: 0.1.0, readme: adapters/antigravity/README.md, skill: erdem, owner: ERDEM_DESIGN_SYSTEM_ANTIGRAVITY_ADAPTER, verifiedWith: { antigravityIde: 1.107.0, runtime: not-verifiable }, optIn: [agents-md-block], hooks: not-shipped, dependencies: none }
+  rule: adapters reference the system and never copy core rules
+
+directories:
+  core: Visual and interaction language
+  ai: How agents understand and modify software projects
+  platforms: How the core adapts to platform constraints
+  adapters: How each AI coding tool consumes the system
+  templates: Blank per-project documents
+  examples: Usage examples (placeholders in Phase 0)
+  tools: Future index, graph, analysis and validation tooling
+
+sourceOfTruth:   # highest precedence first
+  - explicit-project-requirements
+  - project-local-instructions
+  - core
+  - platforms
+  - adapters
+  - examples
+  - generic-assumptions
+
+tools:
+  path: tools/
+  name: project-intel
+  version: 0.1.0
+  readme: tools/README.md
+  runtime: node>=20
+  dependencies: none          # standard library only; guarded by a test
+  entry: { cli: tools/bin/project-intel.mjs, api: tools/api.mjs }
+  commands: [index, graph, status, impact, refresh, route, change-impact, validate, handoff, adapters]
+  outputDir: .ai              # default, inside the scanned project; configurable
+  schemas: { index: 1, summary: 1, graph: 1, fingerprint: 1 }
+  fingerprint: { algo: sha256, normalization: [text-lf-nobom, binary-raw] }
+  languages:
+    dependencyAnalysis: [javascript, typescript]
+    metadataOnlyFallback: generic
+    planned: [python, dart, java, csharp]   # not implemented
+  implemented: [scan, ignore, secret-withholding, fingerprint, index, directory-index, file-index, summaries, stale-detection, dependency-graph, public-surface, risk, graph-json, mermaid, graphviz-dot, graph-views, impact-query, automatic-refresh, context-routing, change-impact-analysis, validation-orchestration, session-continuity]
+  planned: [task-scope-analysis, architecture-analysis, design-validation, context-validation, repository-validation]
+
+phases:
+  - { id: 0, name: Foundation, status: complete }
+  - { id: 1, name: Design language, status: complete }
+  - { id: 2, name: AI context system, status: complete }
+  - { id: 3, name: Graph/index tooling, status: complete }
+  - { id: 4, name: Agent adapters, status: done, done: [4a-generic, 4b-claude, 4c-codex, 4d-antigravity] }
+  - { id: 5, name: Automation, status: done, done: [5a-contract, 5b-automatic-refresh, 5c-context-routing, 5d-change-impact, 5e-validation-orchestration, 5f-session-continuity] }
+  - { id: 6, name: Real-world validation, status: done, done: [real-world-matrix, remediation, release-validation-harness, final-release-audit] }
+
+release:
+  version: 1.0.0
+  validationHarness: tools/scripts/release-validation.mjs   # reproducible; prints PASS, FAIL or NOT_VERIFIED per scenario
+  verification:   # what was actually exercised; "not-verified" is never a pass
+    windows: { status: verified, with: "Windows 11, Node 24.19.0, npm 11.17.0, git 2.55" }
+    posix: { status: not-verified, reason: "no Node-capable POSIX environment was available; the code is plain Node file and process handling, but no run exists" }
+    fileSymlink: { status: not-verified, reason: "creation needs a privilege the test machine does not grant; directory junctions were exercised" }
+    agentSessions:
+      claude: { status: verified, with: "headless Claude Code 2.1.289 session in the release harness (--real-claude); the adapter was verified with 2.1.288" }
+      codex: { status: adapter-verified-earlier, reason: "the Phase 4C smoke test on one machine (Codex CLI 0.158.0-alpha.2.1); no Codex agent session could be run for this release" }
+      antigravity: { status: not-verified, reason: "a GUI agent that cannot be driven headlessly; the launcher, adapter tests and canonical protocol were exercised" }
+  knownLimitations: [no-dependency-analysis-for-python-go-rust-java-css-shell, change-lists-above-400-files, heuristic-secret-and-command-detection, free-text-prompt-injection-surface, single-writer-protocol-without-file-locks-for-manual-edits, validation-pass-covers-the-declared-change-set]

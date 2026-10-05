@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+vendor/
+.venv/
+__pycache__/
+
+# Build output
+.next/
+dist/
+build/
+coverage/
+out/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Tool-generated temporary output (future tools/ phase)
+.erdem-cache/
+*.tmp
+*.log
+tmp/
+
+# Generated project intelligence (never part of the design-system source) and scratch
+.ai/
+.tmp/
+temp/
+.vscode-local/
+.idea-local/

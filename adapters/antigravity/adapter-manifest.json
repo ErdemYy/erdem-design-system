@@ -1,0 +1,145 @@
+{
+  "name": "erdem-antigravity-adapter",
+  "version": "0.1.0",
+  "description": "Antigravity adapter for the Erdem Design System: one skill (erdem) and an optional small project AGENTS.md block. It consumes the canonical protocol and the project-intel engine; it contains neither.",
+  "owner": "ERDEM_DESIGN_SYSTEM_ANTIGRAVITY_ADAPTER",
+  "siblingOwners": [
+    "ERDEM_DESIGN_SYSTEM_CODEX_ADAPTER"
+  ],
+  "configSchemaVersion": 1,
+  "skillName": "erdem",
+  "requiresSystemVersion": "0.8.0",
+  "integrationType": [
+    "skill",
+    "agents-md-block"
+  ],
+  "supportedEnvironment": {
+    "node": ">=20",
+    "operatingSystems": "no platform-specific code; developed and tested on Windows 11 only (macOS and Linux untested)",
+    "antigravity": "IDE 1.107.0 verified for documentation only; see verifiedWith",
+    "dependencies": "none"
+  },
+  "verifiedWith": {
+    "antigravityIde": "1.107.0 (VS Code based, product.json applicationName antigravity-ide)",
+    "platform": "win32",
+    "evidence": "bundled customization guide (builtin/skills/agy-customizations) and string checks in the installed application files; no agent session was run",
+    "runtimeVerification": "NOT VERIFIABLE from outside the application: see README, Runtime verification"
+  },
+  "verifiedCapabilities": [
+    "adapter files install, update, uninstall and are diagnosed correctly in temporary fixture directories (automated tests)",
+    "the launcher, context, handoff-check and intel commands run under Node outside Antigravity (automated tests)",
+    "the documented customization locations exist in the installed product documentation: <project>/.agents/skills, ~/.gemini/config/, AGENTS.md and GEMINI.md directory rules"
+  ],
+  "unverifiedCapabilities": [
+    "that the Antigravity agent discovers and activates the installed skill (not observable without running an agent session)",
+    "that the agent runs the launcher command (command execution depends on the user's permission policy)",
+    "that AGENTS.md content is loaded for a given workspace and when",
+    "user-scope skill discovery from ~/.gemini/config/skills (documented as a global customization root; skills layout documented for customization roots in general)",
+    "behavior in Antigravity 2.0 and the agy command line (agy is not installed in the development environment)"
+  ],
+  "capabilities": [
+    "skill: erdem (design, implementation and mixed tasks, review, context, handoff)",
+    "agents-md-block: small managed block in the project AGENTS.md (project scope, opt-in)",
+    "context command: engine status mapped to missing, current, stale, unverifiable, partial, unavailable",
+    "handoff drift check: compares a handoff's changed files with the working tree",
+    "safe-install: dry run, idempotent, ownership markers, shared-folder detection, no hooks/MCP/rules changes",
+    "doctor: read-only diagnostics"
+  ],
+  "notUsed": [
+    "hooks.json (documented: PreInvocation can inject context, but hooks run through the host shell, fire on every model call, and could not be run here; a shared hooks.json would also need merging with the user's own hooks)",
+    "mcp_config.json (can hold credentials; never read or written)",
+    "plugins, rules/*.md with triggers, workflows (not needed; the skill and AGENTS.md block cover the boundary)",
+    "a user-level instructions file (none documented)"
+  ],
+  "files": [
+    {
+      "source": "skill/SKILL.md",
+      "target": "SKILL.md"
+    },
+    {
+      "source": "skill/references/context.md",
+      "target": "references/context.md"
+    },
+    {
+      "source": "skill/references/task-routing.md",
+      "target": "references/task-routing.md"
+    },
+    {
+      "source": "skill/references/design-routing.md",
+      "target": "references/design-routing.md"
+    },
+    {
+      "source": "skill/references/validation.md",
+      "target": "references/validation.md"
+    },
+    {
+      "source": "skill/references/handoff.md",
+      "target": "references/handoff.md"
+    },
+    {
+      "source": "skill/scripts/erdem.mjs",
+      "target": "scripts/erdem.mjs"
+    }
+  ],
+  "generatedFiles": [
+    "adapter-link.json (user scope only)",
+    ".erdem-owner.json"
+  ],
+  "agentsMd": {
+    "source": "agents-block.md",
+    "optIn": true,
+    "scope": "project"
+  },
+  "ownedPaths": {
+    "user": [
+      "<config home, default ~/.gemini/config>/skills/erdem/",
+      "<config home>/erdem-adapter/ (config.json, install.json)"
+    ],
+    "project": [
+      "<project>/.agents/skills/erdem/ (unless provided by the Codex adapter)",
+      "<project>/.agents/.erdem-antigravity-install.json",
+      "<project>/.agents/erdem-adapter.json (optional, user-written)",
+      "the marker-delimited block in <project>/AGENTS.md (opt-in)"
+    ]
+  },
+  "canonicalFiles": [
+    "system-manifest.yaml",
+    "VERSION",
+    "adapters/GENERIC.md",
+    "ai/CONTEXT_PROTOCOL.md",
+    "ai/INDEX_PROTOCOL.md",
+    "ai/TASK_ROUTING.md",
+    "ai/CHANGE_IMPACT.md",
+    "ai/TOKEN_EFFICIENCY.md",
+    "ai/SESSION_HANDOFF.md",
+    "ai/SAFE_MODIFICATION.md",
+    "ai/VALIDATION_PROTOCOL.md",
+    "ai/GRAPH_PROTOCOL.md",
+    "core/DESIGN_PRINCIPLES.md",
+    "core/DESIGN_TOKENS.md",
+    "core/TOKEN_REGISTER.md",
+    "core/TYPOGRAPHY.md",
+    "core/COLOR_SYSTEM.md",
+    "core/SPACING_SYSTEM.md",
+    "core/LAYOUT_SYSTEM.md",
+    "core/MOTION_SYSTEM.md",
+    "core/COMPONENT_SYSTEM.md",
+    "core/ACCESSIBILITY.md",
+    "core/QUALITY_STANDARD.md",
+    "platforms/WEB.md",
+    "platforms/MOBILE.md",
+    "platforms/FLUTTER.md",
+    "platforms/REACT_NATIVE.md",
+    "platforms/DESKTOP.md",
+    "platforms/WEBGL_3D.md",
+    "templates/TASK_STATE.md",
+    "templates/HANDOFF.md",
+    "tools/bin/project-intel.mjs"
+  ],
+  "compatibilityNotes": [
+    "Locations and formats come from the customization guide bundled with Antigravity IDE 1.107.0 (workspace root .agents/, global root ~/.gemini/config/, skills/<name>/SKILL.md with name and description front matter, AGENTS.md and GEMINI.md directory rules without front matter, hooks.json, progressive disclosure: only skill names and descriptions are injected).",
+    "The project skill folder .agents/skills/erdem is also read by Codex. If the Codex adapter owns it, this adapter keeps it and installs nothing there; if this adapter owns it first, the Codex installer reports a conflict and does not overwrite it.",
+    "Antigravity changes quickly; re-run the doctor and consult the live documentation (antigravity.google/docs) after upgrades.",
+    "If the agent cannot run commands, the protocol still works through direct inspection (adapters/GENERIC.md section 9)."
+  ]
+}

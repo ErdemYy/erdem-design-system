@@ -1,0 +1,1 @@
+{ "name": "fixture-next", "private": true, "dependencies": { "next": "*", "react": "*" } }

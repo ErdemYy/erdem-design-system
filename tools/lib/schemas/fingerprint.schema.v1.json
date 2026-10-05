@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "erdem.fingerprint.v1",
+  "title": "Erdem fingerprint, schema version 1",
+  "type": "object",
+  "required": ["algo", "hash", "size", "normalization"],
+  "properties": {
+    "algo": { "const": "sha256" },
+    "hash": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+    "size": { "type": "integer", "minimum": 0 },
+    "normalization": { "enum": ["text-lf-nobom", "binary-raw", null] },
+    "mtime": { "type": "string" },
+    "reason": { "enum": ["too-large", "unreadable", "member-unverifiable"] }
+  }
+}

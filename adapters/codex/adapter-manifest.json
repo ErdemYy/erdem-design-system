@@ -1,0 +1,136 @@
+{
+  "name": "erdem-codex-adapter",
+  "version": "0.1.0",
+  "description": "Codex adapter for the Erdem Design System: one skill ($erdem) and an optional small AGENTS.md block. It consumes the canonical protocol and the project-intel engine; it contains neither.",
+  "owner": "ERDEM_DESIGN_SYSTEM_CODEX_ADAPTER",
+  "configSchemaVersion": 1,
+  "skillName": "erdem",
+  "requiresSystemVersion": "0.7.0",
+  "integrationType": [
+    "skill",
+    "agents-md-block"
+  ],
+  "supportedEnvironment": {
+    "node": ">=20",
+    "codex": "any Codex build that reads skills from .agents/skills and instructions from AGENTS.md as documented by OpenAI",
+    "operatingSystems": "no platform-specific code; developed and tested on Windows 11 only (macOS and Linux untested)"
+  },
+  "verifiedWith": {
+    "codexCli": "0.158.0-alpha.2.1",
+    "platform": "win32",
+    "node": "24.19.0",
+    "runtimeSmokeTest": {
+      "script": "tests/smoke-codex.mjs",
+      "scope": "project",
+      "codexCli": "0.158.0-alpha.2.1",
+      "skillDiscovered": true,
+      "agentsBlockLoaded": true,
+      "launcherRunInReadOnlySandbox": "rejected by policy (not verified)",
+      "hooks": "not shipped"
+    }
+  },
+  "capabilities": [
+    "skill: $erdem (design, implementation and mixed tasks, review, context, handoff)",
+    "agents-md-block: small managed block in AGENTS.md or AGENTS.override.md (opt-in)",
+    "context command: engine status mapped to missing, current, stale, unverifiable, partial, unavailable",
+    "handoff drift check: compares a handoff's changed files with the working tree",
+    "safe-install: dry run, idempotent, ownership markers, no config.toml or hook changes",
+    "doctor: read-only diagnostics"
+  ],
+  "notUsed": [
+    "hooks (documented by OpenAI and present in the CLI, but registration through hooks.json and the trust review could not be verified in the development environment)",
+    "config.toml (may contain credentials; never read or written)",
+    "custom prompts (no verified integration)"
+  ],
+  "files": [
+    {
+      "source": "skill/SKILL.md",
+      "target": "SKILL.md"
+    },
+    {
+      "source": "skill/references/context.md",
+      "target": "references/context.md"
+    },
+    {
+      "source": "skill/references/task-routing.md",
+      "target": "references/task-routing.md"
+    },
+    {
+      "source": "skill/references/design-routing.md",
+      "target": "references/design-routing.md"
+    },
+    {
+      "source": "skill/references/validation.md",
+      "target": "references/validation.md"
+    },
+    {
+      "source": "skill/references/handoff.md",
+      "target": "references/handoff.md"
+    },
+    {
+      "source": "skill/scripts/erdem.mjs",
+      "target": "scripts/erdem.mjs"
+    }
+  ],
+  "generatedFiles": [
+    "adapter-link.json (user scope only)",
+    ".erdem-owner.json"
+  ],
+  "agentsMd": {
+    "source": "agents-block.md",
+    "optIn": true
+  },
+  "ownedPaths": {
+    "user": [
+      "$HOME/.agents/skills/erdem/",
+      "$CODEX_HOME/erdem-adapter/ (config.json, install.json)",
+      "the marker-delimited block in $CODEX_HOME/AGENTS.md or AGENTS.override.md (opt-in)"
+    ],
+    "project": [
+      "<project>/.agents/skills/erdem/",
+      "<project>/.agents/.erdem-codex-install.json",
+      "<project>/.agents/erdem-adapter.json (optional, user-written)",
+      "the marker-delimited block in <project>/AGENTS.md or AGENTS.override.md (opt-in)"
+    ]
+  },
+  "canonicalFiles": [
+    "system-manifest.yaml",
+    "VERSION",
+    "adapters/GENERIC.md",
+    "ai/CONTEXT_PROTOCOL.md",
+    "ai/INDEX_PROTOCOL.md",
+    "ai/TASK_ROUTING.md",
+    "ai/CHANGE_IMPACT.md",
+    "ai/TOKEN_EFFICIENCY.md",
+    "ai/SESSION_HANDOFF.md",
+    "ai/SAFE_MODIFICATION.md",
+    "ai/VALIDATION_PROTOCOL.md",
+    "ai/GRAPH_PROTOCOL.md",
+    "core/DESIGN_PRINCIPLES.md",
+    "core/DESIGN_TOKENS.md",
+    "core/TOKEN_REGISTER.md",
+    "core/TYPOGRAPHY.md",
+    "core/COLOR_SYSTEM.md",
+    "core/SPACING_SYSTEM.md",
+    "core/LAYOUT_SYSTEM.md",
+    "core/MOTION_SYSTEM.md",
+    "core/COMPONENT_SYSTEM.md",
+    "core/ACCESSIBILITY.md",
+    "core/QUALITY_STANDARD.md",
+    "platforms/WEB.md",
+    "platforms/MOBILE.md",
+    "platforms/FLUTTER.md",
+    "platforms/REACT_NATIVE.md",
+    "platforms/DESKTOP.md",
+    "platforms/WEBGL_3D.md",
+    "templates/TASK_STATE.md",
+    "templates/HANDOFF.md",
+    "tools/bin/project-intel.mjs"
+  ],
+  "compatibilityNotes": [
+    "Skill location ($HOME/.agents/skills, <repo>/.agents/skills) and AGENTS.md discovery (global then project, 32 KiB default combined limit, one file per directory with AGENTS.override.md taking precedence) are taken from OpenAI's documentation.",
+    "Codex detects new skills after a restart.",
+    "AGENTS.md is read once per run: a newly installed block applies to the next session.",
+    "The skill relies on the agent being able to run `node` in its sandbox; if it cannot, the protocol still works through direct inspection (adapters/GENERIC.md section 9)."
+  ]
+}

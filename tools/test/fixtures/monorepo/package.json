@@ -1,0 +1,1 @@
+{ "name": "fixture-mono", "private": true, "workspaces": ["packages/*", "apps/*"] }

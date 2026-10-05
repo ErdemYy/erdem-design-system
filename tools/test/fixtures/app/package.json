@@ -1,0 +1,8 @@
+{
+  "name": "fixture-app",
+  "version": "1.0.0",
+  "description": "Synthetic fixture project for project-intel tests",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": { "react": "*" }
+}
